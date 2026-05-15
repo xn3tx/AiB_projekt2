@@ -1,0 +1,28 @@
+D:\projekty\eti\ahuRegulator\ahuRegulator\bin\Debug\ahuRegulator.dll
+D:\projekty\eti\ahuRegulator\ahuRegulator\bin\Debug\ahuRegulator.pdb
+D:\projekty\eti\ahuRegulator\ahuRegulator\obj\Debug\ahuRegulator.csprojResolveAssemblyReference.cache
+D:\projekty\eti\ahuRegulator\ahuRegulator\obj\Debug\ahuRegulator.dll
+D:\projekty\eti\ahuRegulator\ahuRegulator\obj\Debug\ahuRegulator.pdb
+D:\projekty\eti\ahuRegulator\ahuRegulator\bin\Debug\ahuKlasy.dll
+D:\projekty\eti\ahuRegulator\ahuRegulator\bin\Debug\ahuKlasy.pdb
+D:\projekty\eti\ahuRegulator\ahuRegulator\obj\Debug\ahuRegulator.fmParametry.resources
+D:\projekty\eti\ahuRegulator\ahuRegulator\obj\Debug\ahuRegulator.csproj.GenerateResource.Cache
+C:\eti\aib\eti\ahuRegulator\ahuRegulator\bin\Debug\ahuRegulator.dll
+C:\eti\aib\eti\ahuRegulator\ahuRegulator\bin\Debug\ahuRegulator.pdb
+C:\eti\aib\eti\ahuRegulator\ahuRegulator\bin\Debug\ahuKlasy.dll
+C:\eti\aib\eti\ahuRegulator\ahuRegulator\bin\Debug\ahuKlasy.pdb
+C:\eti\aib\eti\ahuRegulator\ahuRegulator\obj\Debug\ahuRegulator.csprojResolveAssemblyReference.cache
+C:\eti\aib\eti\ahuRegulator\ahuRegulator\obj\Debug\ahuRegulator.fmParametry.resources
+C:\eti\aib\eti\ahuRegulator\ahuRegulator\obj\Debug\ahuRegulator.csproj.GenerateResource.Cache
+C:\eti\aib\eti\ahuRegulator\ahuRegulator\obj\Debug\ahuRegulator.dll
+C:\eti\aib\eti\ahuRegulator\ahuRegulator\obj\Debug\ahuRegulator.pdb
+C:\Users\natal\OneDrive\Dokumenty\Natalia school\Semestr 6\AiB projekt2\ahuRegulator\ahuRegulator\bin\Debug\ahuRegulator.dll
+C:\Users\natal\OneDrive\Dokumenty\Natalia school\Semestr 6\AiB projekt2\ahuRegulator\ahuRegulator\bin\Debug\ahuRegulator.pdb
+C:\Users\natal\OneDrive\Dokumenty\Natalia school\Semestr 6\AiB projekt2\ahuRegulator\ahuRegulator\bin\Debug\ahuKlasy.pdb
+C:\Users\natal\OneDrive\Dokumenty\Natalia school\Semestr 6\AiB projekt2\ahuRegulator\ahuRegulator\obj\Debug\ahuRegulator.csproj.AssemblyReference.cache
+C:\Users\natal\OneDrive\Dokumenty\Natalia school\Semestr 6\AiB projekt2\ahuRegulator\ahuRegulator\obj\Debug\ahuRegulator.fmParametry.resources
+C:\Users\natal\OneDrive\Dokumenty\Natalia school\Semestr 6\AiB projekt2\ahuRegulator\ahuRegulator\obj\Debug\ahuRegulator.csproj.GenerateResource.cache
+C:\Users\natal\OneDrive\Dokumenty\Natalia school\Semestr 6\AiB projekt2\ahuRegulator\ahuRegulator\obj\Debug\ahuRegulator.csproj.CoreCompileInputs.cache
+C:\Users\natal\OneDrive\Dokumenty\Natalia school\Semestr 6\AiB projekt2\ahuRegulator\ahuRegulator\obj\Debug\ahuRegul.D956D8AA.Up2Date
+C:\Users\natal\OneDrive\Dokumenty\Natalia school\Semestr 6\AiB projekt2\ahuRegulator\ahuRegulator\obj\Debug\ahuRegulator.dll
+C:\Users\natal\OneDrive\Dokumenty\Natalia school\Semestr 6\AiB projekt2\ahuRegulator\ahuRegulator\obj\Debug\ahuRegulator.pdb
