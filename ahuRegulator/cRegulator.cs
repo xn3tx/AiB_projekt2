@@ -36,7 +36,8 @@ namespace ahuRegulator
         Praca = 1,
         RozruchWentylatora = 2,
         WychladzanieNagrzewnicy = 3,
-        AlarmNagrzewnicy = 4
+        AlarmNagrzewnicy = 4,
+        AlarmFrost = 5
     }
 
 
@@ -48,10 +49,10 @@ namespace ahuRegulator
         public cDaneWeWy DaneWyjsciowe = null;   //wyjście przesyłane 
         public double Ts = 1;                    //czas, co jaki jest wywoływana procedura regulatora
 
-
-        // ********* zmienne definiowane przez studenta
+        //PI - zewnętrzny (ten wolny)
+        //PI2 - wewnętrzny, sterujący % otwarcia zaworu
         cRegulatorPI RegPI = new cRegulatorPI();
-
+        cRegulatorPI RegPI2 = new cRegulatorPI();
 
         eStanyPracyCentrali StanPracyCentrali = eStanyPracyCentrali.Stop;
 
@@ -59,6 +60,9 @@ namespace ahuRegulator
         double CzasOdStopu = 0;
         double OpoznienieZalaczeniaNagrzewnicy_s = 10;
         double OpoznienieWylaczeniaWentylatora_s = 15;
+        double TminNaw = 16;
+        double TmaxNaw = 32;
+
 
 
 
@@ -75,6 +79,7 @@ namespace ahuRegulator
             double t_naw = DaneWejsciowe.Czytaj(eZmienne.TempNawiewu_C);
             double t_czerp = DaneWejsciowe.Czytaj(eZmienne.TempCzerpni_C);
             double t_wyw = DaneWejsciowe.Czytaj(eZmienne.TempWywiewu_C);
+            double t_za_odzyskiem = DaneWejsciowe.Czytaj(eZmienne.TempZaOdzyskiem_C);
 
             bool boStart = DaneWejsciowe.Czytaj(eZmienne.PracaCentrali) > 0;
 
@@ -84,8 +89,12 @@ namespace ahuRegulator
 
             // algorytm sterowania
             double y_nagrz = 0;
-            
             bool boPracaWentylatoraNawiewu = false;
+
+            if (t_za_odzyskiem < 5)
+            {
+                StanPracyCentrali = eStanyPracyCentrali.AlarmFrost;
+            }
 
 
 
@@ -152,6 +161,14 @@ namespace ahuRegulator
 
                         break;
                     }
+                case eStanyPracyCentrali.AlarmNagrzewnicy:
+                    {
+                        break;
+                    }
+                case eStanyPracyCentrali.AlarmFrost:
+                    {
+                        break;
+                    }
             }
 
 
@@ -175,14 +192,26 @@ namespace ahuRegulator
             fm.kp = RegPI.kp;
             fm.ki = RegPI.ki;
 
+            fm.kp2 = RegPI2.kp;
+            fm.ki2 = RegPI2.ki;
+
             fm.t1 = OpoznienieZalaczeniaNagrzewnicy_s;
             fm.t2 = OpoznienieWylaczeniaWentylatora_s;
+
+            fm.TminNaw = TminNaw;
+            fm.TmaxNaw = TmaxNaw;
 
 
             if (fm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 RegPI.kp = fm.kp;
                 RegPI.ki = fm.ki;
+
+                RegPI2.kp = fm.kp2;
+                RegPI2.ki = fm.ki2;
+
+                TminNaw = fm.TminNaw;
+                TmaxNaw = fm.TmaxNaw;
 
                 OpoznienieZalaczeniaNagrzewnicy_s = fm.t1;
                 OpoznienieWylaczeniaWentylatora_s = fm.t2;
