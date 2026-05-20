@@ -8,8 +8,6 @@ namespace ahuRegulator
 {
 
     #region ParametryLokalne
-
-    // przykładowa realizacja - do modyfikacji przez studenta
     class cRegulatorPI
     {
         double Ts = 1;  
@@ -18,18 +16,45 @@ namespace ahuRegulator
         public double kp = 1;
         public double ki = 0;
 
+        // ograniczenia wysterowania (przypisanie wartości w iWywolanie bo różne dla PI1 i PI2)
+        public double ymin;
+        public double ymax;
 
         public double Wyjscie(double Uchyb)
         {
-            calka = calka + Uchyb * Ts;
-            return kp * Uchyb + ki * calka/60;
+            double y = kp * Uchyb + ki * calka / 60;  //wyjście regulatora
+
+            //anti wind-up
+            if (y < ymax && y > ymin)
+            {
+                calka = calka + Uchyb * Ts;
+            }
+            y = kp * Uchyb + ki * calka / 60;
+
+            //nasycenie
+            if (y > ymax)
+            {
+                y = ymax;
+            }
+
+            if (y < ymin)
+            {
+                y = ymin;
+            }
+            return y;
+        }
+
+
+        public void Reset()
+        {
+            calka = 0;   //zerowanie calki
         }
     }
     #endregion
 
 
 
-    // przykładowe stany pracy centrali - do zmiany podkądem właściwego projektu
+    // przykładowe stany pracy centrali - do zmiany pod kątem właściwego projektu
     public enum eStanyPracyCentrali
     {
         Stop = 0,
@@ -49,8 +74,9 @@ namespace ahuRegulator
         public cDaneWeWy DaneWyjsciowe = null;   //wyjście przesyłane 
         public double Ts = 1;                    //czas, co jaki jest wywoływana procedura regulatora
 
-        //PI - zewnętrzny (ten wolny)
+        //PI - zewnętrzny, sterujący temperaturą nawiewu
         //PI2 - wewnętrzny, sterujący % otwarcia zaworu
+        //sterowanie zaworem chłodnicy też przez PI2???
         cRegulatorPI RegPI = new cRegulatorPI();
         cRegulatorPI RegPI2 = new cRegulatorPI();
 
@@ -70,26 +96,33 @@ namespace ahuRegulator
         // funkcja wywoływana przez zewnętrzny program co czas Ts
         public int iWywolanie()    
         {
-            // wnętrze funkcji dowolnie zmieniane przez studenta
-
-
-            // przykład odczytu danych wejściowych
+            // odczyt danych wejściowych
             double t_zad = DaneWejsciowe.Czytaj(eZmienne.TempZadana_C);
             double t_pom = DaneWejsciowe.Czytaj(eZmienne.TempPomieszczenia_C);
             double t_naw = DaneWejsciowe.Czytaj(eZmienne.TempNawiewu_C);
             double t_czerp = DaneWejsciowe.Czytaj(eZmienne.TempCzerpni_C);
             double t_wyw = DaneWejsciowe.Czytaj(eZmienne.TempWywiewu_C);
             double t_za_odzyskiem = DaneWejsciowe.Czytaj(eZmienne.TempZaOdzyskiem_C);
-
+            double t_wyrz = DaneWejsciowe.Czytaj(eZmienne.TempWyrzutni_C);
+            
             bool boStart = DaneWejsciowe.Czytaj(eZmienne.PracaCentrali) > 0;
 
+            // ograniczenia wartości min i max regulatora PI1
+            RegPI.ymin = TminNaw;
+            RegPI.ymax = TmaxNaw;
 
-
+            // ograniczenia wartości min i max regulatora PI2
+            RegPI2.ymin = 0;
+            RegPI2.ymax = 100;
 
 
             // algorytm sterowania
             double y_nagrz = 0;
+            double y_chl = 0;
+            double y_bypass = 0;
             bool boPracaWentylatoraNawiewu = false;
+            bool boPracaWentylatoraWywiewu = false;
+            bool boPompaNagrzewnicy = false;
 
             if (t_za_odzyskiem < 5)
             {
@@ -97,14 +130,16 @@ namespace ahuRegulator
             }
 
 
-
+            // stany pracy
             switch (StanPracyCentrali)
             {
                 case eStanyPracyCentrali.Stop:
                     {
                         y_nagrz = 0;
                         boPracaWentylatoraNawiewu = false;
-                        if(boStart)
+                        RegPI.Reset();
+                        RegPI2.Reset();
+                        if (boStart)
                         {
                             StanPracyCentrali = eStanyPracyCentrali.RozruchWentylatora;
                         }
@@ -117,12 +152,12 @@ namespace ahuRegulator
                         if (CzasOdStartu < OpoznienieZalaczeniaNagrzewnicy_s)
                         {
                             y_nagrz = 0;
+                            boPompaNagrzewnicy = Convert.ToBoolean(y_nagrz);
                             CzasOdStartu += Ts;
                         }
                         else
                         {
                             StanPracyCentrali = eStanyPracyCentrali.Praca;
-                            y_nagrz = RegPI.Wyjscie(t_zad - t_pom);
                         }
 
 
@@ -135,11 +170,23 @@ namespace ahuRegulator
                         if (!boStart)
                         {
                             y_nagrz = 0;
+                            y_chl = 0;
+                            boPompaNagrzewnicy = Convert.ToBoolean(y_nagrz);
                             StanPracyCentrali = eStanyPracyCentrali.WychladzanieNagrzewnicy;
                         }
                         else
                         {
-                            y_nagrz = RegPI.Wyjscie(t_zad - t_pom);
+                            //najpierw bajpas, drugi priorytet na grzanie/chłodzenie
+                            //dodać chłodzenie i jakąś strefe martwą grzanie-chłodzenie
+
+                            // regulator PI temperatura nawiewu
+                            double uchybPomZad = t_zad - t_pom;
+                            double t_naw_zad = RegPI.Wyjscie(uchybPomZad);
+
+                            // regulator PI2 wysterowanie nagrzewnicy
+                            double uchybNaw = t_naw_zad - t_naw;
+                            y_nagrz = RegPI2.Wyjscie(uchybNaw);
+                            boPompaNagrzewnicy = Convert.ToBoolean(y_nagrz);
                         }
                         
                         break;
@@ -150,19 +197,25 @@ namespace ahuRegulator
                         {
                             CzasOdStopu += Ts;
                             y_nagrz = 0;
+                            boPompaNagrzewnicy = Convert.ToBoolean(y_nagrz);
                             boPracaWentylatoraNawiewu = true;
                         }
                         else
                         {
                             StanPracyCentrali = eStanyPracyCentrali.Stop;
                             y_nagrz = 0;
-                            boPracaWentylatoraNawiewu = true;
+                            boPompaNagrzewnicy = Convert.ToBoolean(y_nagrz);
+                            boPracaWentylatoraNawiewu = false;
                         }
 
                         break;
                     }
                 case eStanyPracyCentrali.AlarmNagrzewnicy:
                     {
+                        y_nagrz = 100;
+                        boPompaNagrzewnicy = Convert.ToBoolean(y_nagrz);
+                        //zamknięcie przepustnic
+                        //po 5 minutach włączenie centrali
                         break;
                     }
                 case eStanyPracyCentrali.AlarmFrost:
@@ -175,9 +228,13 @@ namespace ahuRegulator
             // ustawienie wyjść
             DaneWyjsciowe.Zapisz(eZmienne.WysterowanieNagrzewnicy1_pr, y_nagrz);
             DaneWyjsciowe.Zapisz(eZmienne.ZezwolenieNaPraceWentylatoraNawiewu, boPracaWentylatoraNawiewu);
+            DaneWyjsciowe.Zapisz(eZmienne.ZezwolenieNaPraceWentylatoraWywiewu, boPracaWentylatoraWywiewu);
+            DaneWyjsciowe.Zapisz(eZmienne.ZalaczeniePompyNagrzewnicyWodnej1, boPompaNagrzewnicy);
+            DaneWyjsciowe.Zapisz(eZmienne.WysterowanieChlodnicy_pr, y_chl);
+            DaneWyjsciowe.Zapisz(eZmienne.Wysterowanie_bypass_pr, y_bypass);
             return 0;
         }
-
+       
 
 
 
@@ -218,6 +275,5 @@ namespace ahuRegulator
 
             }
         }
-
     }
 }
