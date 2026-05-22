@@ -2,6 +2,6 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <StartAction>Program</StartAction>
-    <StartProgram>C:\Users\natal\OneDrive\Dokumenty\Natalia school\Semestr 6\AiB projekt2\ahuRegulator\ahuRegulator\bin\Debug\ahuSim.exe</StartProgram>
+    <StartProgram>C:\Users\mpenk\Documents\PG\semestr6\AiB\AiB_projekt2\ahuRegulator\bin\Debug\ahuSim.exe</StartProgram>
   </PropertyGroup>
 </Project>

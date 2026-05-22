@@ -26,3 +26,13 @@ C:\Users\natal\OneDrive\Dokumenty\Natalia school\Semestr 6\AiB projekt2\ahuRegul
 C:\Users\natal\OneDrive\Dokumenty\Natalia school\Semestr 6\AiB projekt2\ahuRegulator\ahuRegulator\obj\Debug\ahuRegul.D956D8AA.Up2Date
 C:\Users\natal\OneDrive\Dokumenty\Natalia school\Semestr 6\AiB projekt2\ahuRegulator\ahuRegulator\obj\Debug\ahuRegulator.dll
 C:\Users\natal\OneDrive\Dokumenty\Natalia school\Semestr 6\AiB projekt2\ahuRegulator\ahuRegulator\obj\Debug\ahuRegulator.pdb
+C:\Users\mpenk\Documents\PG\semestr6\AiB\AiB_projekt2\ahuRegulator\bin\Debug\ahuRegulator.dll
+C:\Users\mpenk\Documents\PG\semestr6\AiB\AiB_projekt2\ahuRegulator\bin\Debug\ahuRegulator.pdb
+C:\Users\mpenk\Documents\PG\semestr6\AiB\AiB_projekt2\ahuRegulator\bin\Debug\ahuKlasy.pdb
+C:\Users\mpenk\Documents\PG\semestr6\AiB\AiB_projekt2\ahuRegulator\obj\Debug\ahuRegulator.csproj.AssemblyReference.cache
+C:\Users\mpenk\Documents\PG\semestr6\AiB\AiB_projekt2\ahuRegulator\obj\Debug\ahuRegulator.fmParametry.resources
+C:\Users\mpenk\Documents\PG\semestr6\AiB\AiB_projekt2\ahuRegulator\obj\Debug\ahuRegulator.csproj.GenerateResource.cache
+C:\Users\mpenk\Documents\PG\semestr6\AiB\AiB_projekt2\ahuRegulator\obj\Debug\ahuRegulator.csproj.CoreCompileInputs.cache
+C:\Users\mpenk\Documents\PG\semestr6\AiB\AiB_projekt2\ahuRegulator\obj\Debug\ahuRegul.D956D8AA.Up2Date
+C:\Users\mpenk\Documents\PG\semestr6\AiB\AiB_projekt2\ahuRegulator\obj\Debug\ahuRegulator.dll
+C:\Users\mpenk\Documents\PG\semestr6\AiB\AiB_projekt2\ahuRegulator\obj\Debug\ahuRegulator.pdb

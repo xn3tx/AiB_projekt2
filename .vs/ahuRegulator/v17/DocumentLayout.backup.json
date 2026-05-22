@@ -1,0 +1,99 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\mpenk\\Documents\\PG\\semestr6\\AiB\\AiB_projekt2\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{43EA6414-6DCC-4946-9BD8-D88E57ECECE7}|ahuRegulator\\ahuRegulator.csproj|c:\\users\\mpenk\\documents\\pg\\semestr6\\aib\\aib_projekt2\\ahuregulator\\cregulator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{43EA6414-6DCC-4946-9BD8-D88E57ECECE7}|ahuRegulator\\ahuRegulator.csproj|solutionrelative:ahuregulator\\cregulator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{43EA6414-6DCC-4946-9BD8-D88E57ECECE7}|ahuRegulator\\ahuRegulator.csproj|C:\\Users\\mpenk\\Documents\\PG\\semestr6\\AiB\\AiB_projekt2\\ahuregulator\\fmparametry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{43EA6414-6DCC-4946-9BD8-D88E57ECECE7}|ahuRegulator\\ahuRegulator.csproj|solutionrelative:ahuregulator\\fmparametry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{43EA6414-6DCC-4946-9BD8-D88E57ECECE7}|ahuRegulator\\ahuRegulator.csproj|C:\\Users\\mpenk\\Documents\\PG\\semestr6\\AiB\\AiB_projekt2\\ahuregulator\\fmparametry.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{43EA6414-6DCC-4946-9BD8-D88E57ECECE7}|ahuRegulator\\ahuRegulator.csproj|solutionrelative:ahuregulator\\fmparametry.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{43EA6414-6DCC-4946-9BD8-D88E57ECECE7}|ahuRegulator\\ahuRegulator.csproj|C:\\Users\\mpenk\\Documents\\PG\\semestr6\\AiB\\AiB_projekt2\\ahuregulator\\fmparametry.resx||{81828910-B8B3-4D2B-99A3-067027C180C1}",
+      "RelativeMoniker": "D:0:0:{43EA6414-6DCC-4946-9BD8-D88E57ECECE7}|ahuRegulator\\ahuRegulator.csproj|solutionrelative:ahuregulator\\fmparametry.resx||{81828910-B8B3-4D2B-99A3-067027C180C1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{43EA6414-6DCC-4946-9BD8-D88E57ECECE7}|ahuRegulator\\ahuRegulator.csproj|C:\\Users\\mpenk\\Documents\\PG\\semestr6\\AiB\\AiB_projekt2\\ahuregulator\\properties\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{43EA6414-6DCC-4946-9BD8-D88E57ECECE7}|ahuRegulator\\ahuRegulator.csproj|solutionrelative:ahuregulator\\properties\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "fmParametry.resx",
+              "DocumentMoniker": "C:\\Users\\mpenk\\Documents\\PG\\semestr6\\AiB\\AiB_projekt2\\ahuRegulator\\fmParametry.resx",
+              "RelativeDocumentMoniker": "ahuRegulator\\fmParametry.resx",
+              "ToolTip": "C:\\Users\\mpenk\\Documents\\PG\\semestr6\\AiB\\AiB_projekt2\\ahuRegulator\\fmParametry.resx",
+              "RelativeToolTip": "ahuRegulator\\fmParametry.resx",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
+              "WhenOpened": "2026-05-20T20:42:14.609Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "fmParametry.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\mpenk\\Documents\\PG\\semestr6\\AiB\\AiB_projekt2\\ahuRegulator\\fmParametry.Designer.cs",
+              "RelativeDocumentMoniker": "ahuRegulator\\fmParametry.Designer.cs",
+              "ToolTip": "C:\\Users\\mpenk\\Documents\\PG\\semestr6\\AiB\\AiB_projekt2\\ahuRegulator\\fmParametry.Designer.cs",
+              "RelativeToolTip": "ahuRegulator\\fmParametry.Designer.cs",
+              "ViewState": "AgIAAKoBAAAAAAAAAAAkwMIBAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-20T20:42:12.832Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "cRegulator.cs",
+              "DocumentMoniker": "C:\\Users\\mpenk\\Documents\\PG\\semestr6\\AiB\\AiB_projekt2\\ahuRegulator\\cRegulator.cs",
+              "RelativeDocumentMoniker": "ahuRegulator\\cRegulator.cs",
+              "ToolTip": "C:\\Users\\mpenk\\Documents\\PG\\semestr6\\AiB\\AiB_projekt2\\ahuRegulator\\cRegulator.cs*",
+              "RelativeToolTip": "ahuRegulator\\cRegulator.cs*",
+              "ViewState": "AgIAABABAAAAAAAAAAAkwB8BAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-20T20:21:25.255Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AssemblyInfo.cs",
+              "DocumentMoniker": "C:\\Users\\mpenk\\Documents\\PG\\semestr6\\AiB\\AiB_projekt2\\ahuRegulator\\Properties\\AssemblyInfo.cs",
+              "RelativeDocumentMoniker": "ahuRegulator\\Properties\\AssemblyInfo.cs",
+              "ToolTip": "C:\\Users\\mpenk\\Documents\\PG\\semestr6\\AiB\\AiB_projekt2\\ahuRegulator\\Properties\\AssemblyInfo.cs",
+              "RelativeToolTip": "ahuRegulator\\Properties\\AssemblyInfo.cs",
+              "ViewState": "AgIAABYAAACA9JFq9JEWwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-20T20:21:14.751Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "fmParametry.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\mpenk\\Documents\\PG\\semestr6\\AiB\\AiB_projekt2\\ahuRegulator\\fmParametry.cs",
+              "RelativeDocumentMoniker": "ahuRegulator\\fmParametry.cs",
+              "ToolTip": "C:\\Users\\mpenk\\Documents\\PG\\semestr6\\AiB\\AiB_projekt2\\ahuRegulator\\fmParametry.cs [Design]",
+              "RelativeToolTip": "ahuRegulator\\fmParametry.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-20T20:20:39.858Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
