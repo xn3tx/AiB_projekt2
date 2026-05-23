@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 using ahuKlasy;
 
 namespace ahuRegulator
@@ -58,8 +59,9 @@ namespace ahuRegulator
         Praca = 1,
         RozruchWentylatora = 2,
         WychladzanieNagrzewnicy = 3,
-        AlarmNagrzewnicy = 4,
-        AlarmFrost = 5
+        AlarmFrost = 4,
+        AlarmPresostatNawiew = 5,
+        AlarmPresostatWywiew = 6
     }
 
     public class cRegulator
@@ -109,6 +111,9 @@ namespace ahuRegulator
             double t_wyrz = DaneWejsciowe.Czytaj(eZmienne.TempWyrzutni_C);
 
             bool boStart = DaneWejsciowe.Czytaj(eZmienne.PracaCentrali) > 0;
+            bool frost = DaneWejsciowe.Czytaj(eZmienne.TermostatPZamrNagrzewnicyWodnej) > 0;
+            bool presostatNaw = DaneWejsciowe.Czytaj(eZmienne.PresostatWentylatoraNawiewu) > 0;
+            bool presostatWyw = DaneWejsciowe.Czytaj(eZmienne.PresostatWentylatoraWywiewu) > 0;
 
             // ograniczenia wartości min i max regulatorów
             RegPI.ymin = TminNaw;
@@ -120,10 +125,11 @@ namespace ahuRegulator
             RegPI2_2etap.ymin = 0;
             RegPI2_2etap.ymax = 100;
 
-            // algorytm sterowania - baza bezpieczna (czyszczenie stanów na początku cyklu)
             double y_nagrz = 0;
             double y_bypass = 100.0; // Domyślnie bezpiecznie otwarty bypass
             double y_chl_procent = 0; // Wartość double (0.0 - 100.0) dla wyświetlacza
+            double s_chlodnica = 0;
+            double s_bypass = 0;
 
             bool boPracaWentylatoraNawiewu = false;
             bool boPracaWentylatoraWywiewu = false;
@@ -131,10 +137,8 @@ namespace ahuRegulator
             bool boGrzanie2 = false;
             bool boChlodnica = false;
 
-            if (t_za_odzyskiem < 5)
-            {
-                StanPracyCentrali = eStanyPracyCentrali.AlarmFrost;
-            }
+            bool MessageNawiew = false;
+            bool MessageWywiew = false;
 
             // stany pracy
             switch (StanPracyCentrali)
@@ -143,6 +147,8 @@ namespace ahuRegulator
                     {
                         y_nagrz = 0;
                         y_bypass = 100.0;
+                        y_chl_procent = 0;
+
                         boChlodnica = false;
                         boGrzanie1 = false;
                         boGrzanie2 = false;
@@ -168,16 +174,44 @@ namespace ahuRegulator
                         y_bypass = 100.0;
                         boChlodnica = false;
 
-                        if (CzasOdStartu < OpoznienieZalaczeniaNagrzewnicy_s)
+                        // 1. Zabezpieczenie frost
+                        if (t_za_odzyskiem < 5 || frost == true)
                         {
-                            y_nagrz = 0;
-                            boGrzanie1 = false;
-                            boGrzanie2 = false;
-                            CzasOdStartu += Ts;
+                            StanPracyCentrali = eStanyPracyCentrali.AlarmFrost;
                         }
+
+                        // 2. Alarm presostat nawiew
+                        else if (presostatNaw == true)
+                        {
+                            StanPracyCentrali = eStanyPracyCentrali.AlarmPresostatNawiew;
+                        }
+
+                        // 3. Alarm presostat wywiew
+                        else if (presostatWyw == true)
+                        {
+                            StanPracyCentrali = eStanyPracyCentrali.AlarmPresostatWywiew;
+                        }
+
+                        // 4. Normalna praca
                         else
                         {
-                            StanPracyCentrali = eStanyPracyCentrali.Praca;
+                            boPracaWentylatoraNawiewu = true;
+                            boPracaWentylatoraWywiewu = true;
+                            y_bypass = 100.0;
+                            boChlodnica = false;
+
+                            if (CzasOdStartu < OpoznienieZalaczeniaNagrzewnicy_s)
+                            {
+                                y_nagrz = 0;
+                                y_chl_procent = 0;
+                                boGrzanie1 = false;
+                                boGrzanie2 = false;
+                                CzasOdStartu += Ts;
+                            }
+                            else
+                            {
+                                StanPracyCentrali = eStanyPracyCentrali.Praca;
+                            }
                         }
                         break;
                     }
@@ -185,12 +219,14 @@ namespace ahuRegulator
                     {
                         boPracaWentylatoraNawiewu = true;
                         boPracaWentylatoraWywiewu = true;
+                        boChlodnica = false;
 
                         if (!boStart)
                         {
                             y_nagrz = 0;
-                            boChlodnica = false;
+                            y_chl_procent = 0;
                             y_bypass = 100.0;
+                            boChlodnica = false;
                             boGrzanie1 = false;
                             boGrzanie2 = false;
 
@@ -199,92 +235,122 @@ namespace ahuRegulator
                         }
                         else
                         {
-                            // 1. Regulator nadrzędny (Temperatura pomieszczenia)
+                            // Regulator nadrzędny (Temperatura pomieszczenia)
                             double uchybPomZad = t_zad - t_pom;
                             double t_naw_zad = RegPI.Wyjscie(uchybPomZad);
 
-                            // 2. Regulator podrzędny (Temperatura nawiewu)
+                            // Regulator podrzędny (Temperatura nawiewu)
                             double uchybNaw = t_naw_zad - t_naw;
 
 
-                            // STREFA MARTWA 
-                            if (uchybNaw > -2.0 && uchybNaw < 2.0)
+                            // 1. Zabezpieczenie frost
+                            if (t_za_odzyskiem < 5 || frost == true)
                             {
-                                y_bypass = 100.0;
-                                y_nagrz = 0;
-                                boChlodnica = false;
-                                boGrzanie1 = false;
-                                boGrzanie2 = false;
-
-                                RegPI2_2etap.Reset();
+                                StanPracyCentrali = eStanyPracyCentrali.AlarmFrost;
                             }
 
-                            // GRZANIE
-                            else if (uchybNaw >= 2.0)
+                            // 2. Alarm presostat nawiew
+                            else if (presostatNaw == true)
                             {
+                                StanPracyCentrali = eStanyPracyCentrali.AlarmPresostatNawiew;
+                            }
+
+                            // 3. Alarm presostat wywiew
+                            else if (presostatWyw == true)
+                            {
+                                StanPracyCentrali = eStanyPracyCentrali.AlarmPresostatWywiew;
+                            }
+
+                            // 4. Normalna praca
+                            else
+                            {
+                                boPracaWentylatoraNawiewu = true;
+                                boPracaWentylatoraWywiewu = true;
                                 boChlodnica = false;
 
-                                // bypass
-                                double s_bypass = RegPI2.Wyjscie(uchybNaw);
-                                y_bypass = 100.0 - s_bypass;
+                                // flaga strefy martwej (bo wyjście regulatora niestabilne) NIE DZIAŁA
+                                bool strefaMartwa = false;
+                                if (!strefaMartwa && Math.Abs(uchybNaw) < 2)
+                                    strefaMartwa = true;
 
-                                // Nagrzewnica
-                                if (y_bypass <= 1.0)
+                                if (strefaMartwa && Math.Abs(uchybNaw) >= 2)
+                                    strefaMartwa = false;
+
+                                // STREFA MARTWA 
+                                if (strefaMartwa)
                                 {
-                                    y_bypass = 0;
-                                    y_nagrz = RegPI2_2etap.Wyjscie(uchybNaw);
-
-
-                                    boGrzanie1 = false; 
-                                    boGrzanie2 = true;  
-                                }
-                                else
-                                {
+                                    y_bypass = 100.0;
                                     y_nagrz = 0;
+                                    y_chl_procent = 0;
+                                    boChlodnica = false;
+                                    boGrzanie1 = false;
+                                    boGrzanie2 = false;
+                                    s_chlodnica = 0;
 
-
-                                    boGrzanie1 = true;  
-                                    boGrzanie2 = false; 
-
+                                    RegPI2.Reset();
+                                    RegPI.Reset();
                                     RegPI2_2etap.Reset();
                                 }
-                            }
 
-                            // CHLODZENIE
-                            else if (uchybNaw <= -2.0)
-                            {
-                                y_nagrz = 0;
-                                boGrzanie1 = false;
-                                boGrzanie2 = false;
-
-                                double uchybModul = Math.Abs(uchybNaw);
-
-                                // bypass
-                                double s_bypass = RegPI2.Wyjscie(uchybModul);
-                                y_bypass = 100.0 - s_bypass;
-
-                                // Chlodnica
-                                if (y_bypass <= 1.0)
+                                // GRZANIE
+                                else if (uchybNaw >= 2.0)
                                 {
-                                    y_bypass = 0;
+                                    boChlodnica = false;
+                                    y_chl_procent = 0;
 
+                                    // bypass
+                                    s_bypass = RegPI2.Wyjscie(uchybNaw);
+                                    y_bypass = 100.0 - s_bypass;
+
+                                    // Nagrzewnica
+                                    if (y_bypass <= 1.0)
+                                    {
+                                        y_bypass = 0;
+                                        y_nagrz = RegPI2_2etap.Wyjscie(uchybNaw);
+
+
+                                        boGrzanie1 = false;
+                                        boGrzanie2 = true;
+                                    }
+                                    else
+                                    {
+                                        y_nagrz = 0;
+
+                                        boGrzanie1 = true;
+                                        boGrzanie2 = false;
+
+                                        RegPI2_2etap.Reset();
+                                    }
+                                }
+
+                                // CHLODZENIE
+                                else if (uchybNaw <= -2.0)
+                                {
+                                    y_nagrz = 0;
                                     boGrzanie1 = false;
                                     boGrzanie2 = false;
 
-                                    double s_chlodnica = RegPI2_2etap.Wyjscie(uchybModul);
-                                    boChlodnica = (s_chlodnica > 1.0);
-                                }
-                                else
-                                {
-                                    boChlodnica = false;
-                                    RegPI2_2etap.Reset();
-                                }
-                            }
+                                    double uchybModul = Math.Abs(uchybNaw);
 
-                            // Dodatkowa ochrona nagrzewnicy przed mrozem
-                            if (t_czerp < 2.0 && uchybNaw > -2.0)
-                            {
-                                boGrzanie2 = true;
+                                    // bypass
+                                    s_bypass = RegPI2.Wyjscie(uchybModul);
+                                    y_bypass = 100.0 - s_bypass;
+
+                                    // Chlodnica
+                                    if (y_bypass <= 1.0)
+                                    {
+                                        y_bypass = 0;
+                                        boGrzanie1 = false;
+                                        s_chlodnica = RegPI2_2etap.Wyjscie(uchybModul);
+                                        boChlodnica = (s_chlodnica > 1.0);
+                                    }
+                                    else
+                                    {
+                                        boGrzanie1 = true;   //TEST
+                                        boChlodnica = false;
+                                        RegPI2_2etap.Reset();
+                                    }
+                                }
                             }
                         }
                         break;
@@ -301,6 +367,7 @@ namespace ahuRegulator
                             boPracaWentylatoraNawiewu = true;
                             boPracaWentylatoraWywiewu = true;
                             y_bypass = 100.0;
+                            y_chl_procent = 0;
                         }
                         else
                         {
@@ -308,16 +375,57 @@ namespace ahuRegulator
                         }
                         break;
                     }
-                case eStanyPracyCentrali.AlarmNagrzewnicy:
                 case eStanyPracyCentrali.AlarmFrost:
                     {
-                        y_nagrz = 100;
-                        boGrzanie1 = false;
-                        boGrzanie2 = true;
-                        boChlodnica = false;
-                        y_bypass = 0;
-                        boPracaWentylatoraNawiewu = false;
-                        boPracaWentylatoraWywiewu = false;
+                        if (!boStart)
+                        {
+                            y_nagrz = 0;
+                            boChlodnica = false;
+                            y_bypass = 100.0;
+                            y_chl_procent = 0;
+                            boGrzanie1 = false;
+                            boGrzanie2 = false;
+
+                            CzasOdStopu = 0;
+                            StanPracyCentrali = eStanyPracyCentrali.Stop;
+                        }
+                        else
+                        {
+                            if (t_za_odzyskiem < 5 || frost == true)
+                            {
+                                y_nagrz = 100;
+                                boGrzanie1 = false;
+                                boGrzanie2 = true;
+                                boChlodnica = false;
+                                y_bypass = 0;
+                                boPracaWentylatoraNawiewu = false;
+                                boPracaWentylatoraWywiewu = false;
+                            }
+                            else
+                            {
+                                StanPracyCentrali = eStanyPracyCentrali.RozruchWentylatora;
+                            }
+                        }
+                        break;
+                    }
+                case eStanyPracyCentrali.AlarmPresostatNawiew:
+                    {
+                        if (!MessageNawiew)
+                        {
+                            System.Windows.Forms.MessageBox.Show("Alarm presostatu nawiewu");
+                            MessageNawiew = true;
+                        }
+                        StanPracyCentrali = eStanyPracyCentrali.Praca;
+                        break;
+                    }
+                case eStanyPracyCentrali.AlarmPresostatWywiew:
+                    {
+                        if (!MessageWywiew)
+                        {
+                            System.Windows.Forms.MessageBox.Show("Alarm presostatu wywiewu");
+                            MessageWywiew = true;
+                        }
+                        StanPracyCentrali = eStanyPracyCentrali.Praca;
                         break;
                     }
             }
