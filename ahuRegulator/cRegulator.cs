@@ -60,8 +60,7 @@ namespace ahuRegulator
         RozruchWentylatora = 2,
         WychladzanieNagrzewnicy = 3,
         AlarmFrost = 4,
-        AlarmPresostatNawiew = 5,
-        AlarmPresostatWywiew = 6
+        AlarmPresostat = 5,
     }
 
     public class cRegulator
@@ -115,6 +114,9 @@ namespace ahuRegulator
             bool presostatNaw = DaneWejsciowe.Czytaj(eZmienne.PresostatWentylatoraNawiewu) > 0;
             bool presostatWyw = DaneWejsciowe.Czytaj(eZmienne.PresostatWentylatoraWywiewu) > 0;
 
+            //System.Windows.Forms.MessageBox.Show($"WYW: {presostatWyw}");
+
+
             // ograniczenia wartości min i max regulatorów
             RegPI.ymin = TminNaw;
             RegPI.ymax = TmaxNaw;
@@ -136,9 +138,8 @@ namespace ahuRegulator
             bool boGrzanie1 = false;
             bool boGrzanie2 = false;
             bool boChlodnica = false;
+            bool boPresostat = false;
 
-            bool MessageNawiew = false;
-            bool MessageWywiew = false;
 
             // stany pracy
             switch (StanPracyCentrali)
@@ -161,7 +162,7 @@ namespace ahuRegulator
                         RegPI2_2etap.Reset();
                         CzasOdStartu = 0;
 
-                        if (boStart)
+                        if (boStart && !presostatNaw && !presostatWyw)
                         {
                             StanPracyCentrali = eStanyPracyCentrali.RozruchWentylatora;
                         }
@@ -183,13 +184,13 @@ namespace ahuRegulator
                         // 2. Alarm presostat nawiew
                         else if (presostatNaw == true)
                         {
-                            StanPracyCentrali = eStanyPracyCentrali.AlarmPresostatNawiew;
+                            StanPracyCentrali = eStanyPracyCentrali.AlarmPresostat;
                         }
 
                         // 3. Alarm presostat wywiew
                         else if (presostatWyw == true)
                         {
-                            StanPracyCentrali = eStanyPracyCentrali.AlarmPresostatWywiew;
+                            StanPracyCentrali = eStanyPracyCentrali.AlarmPresostat;
                         }
 
                         // 4. Normalna praca
@@ -252,13 +253,13 @@ namespace ahuRegulator
                             // 2. Alarm presostat nawiew
                             else if (presostatNaw == true)
                             {
-                                StanPracyCentrali = eStanyPracyCentrali.AlarmPresostatNawiew;
+                                StanPracyCentrali = eStanyPracyCentrali.AlarmPresostat;
                             }
 
                             // 3. Alarm presostat wywiew
                             else if (presostatWyw == true)
                             {
-                                StanPracyCentrali = eStanyPracyCentrali.AlarmPresostatWywiew;
+                                StanPracyCentrali = eStanyPracyCentrali.AlarmPresostat;
                             }
 
                             // 4. Normalna praca
@@ -408,29 +409,15 @@ namespace ahuRegulator
                         }
                         break;
                     }
-                case eStanyPracyCentrali.AlarmPresostatNawiew:
+                case eStanyPracyCentrali.AlarmPresostat:
                     {
-                        if (!MessageNawiew)
-                        {
-                            System.Windows.Forms.MessageBox.Show("Alarm presostatu nawiewu");
-                            MessageNawiew = true;
-                        }
-                        StanPracyCentrali = eStanyPracyCentrali.Praca;
-                        break;
-                    }
-                case eStanyPracyCentrali.AlarmPresostatWywiew:
-                    {
-                        if (!MessageWywiew)
-                        {
-                            System.Windows.Forms.MessageBox.Show("Alarm presostatu wywiewu");
-                            MessageWywiew = true;
-                        }
-                        StanPracyCentrali = eStanyPracyCentrali.Praca;
+                        System.Windows.Forms.MessageBox.Show("Alarm presostatu filtra");
+                        StanPracyCentrali = eStanyPracyCentrali.Stop;
+
                         break;
                     }
             }
 
-            // 4. MAPOWANIE WYJŚĆ DO SYMULATORA (Bezpieczne typy danych)
             DaneWyjsciowe.Zapisz(eZmienne.WysterowanieNagrzewnicy1_pr, y_nagrz);
             DaneWyjsciowe.Zapisz(eZmienne.Wysterowanie_bypass_pr, y_bypass);
 
@@ -444,7 +431,7 @@ namespace ahuRegulator
             DaneWyjsciowe.Zapisz(eZmienne.ZalaczeniePompyNagrzewnicyWodnej1, boGrzanie1);
             DaneWyjsciowe.Zapisz(eZmienne.ZalaczeniePompyNagrzewnicyWodnej2, boGrzanie2);
             DaneWyjsciowe.Zapisz(eZmienne.ZalaczeniePompyChlodnicyWodnej, boChlodnica);
-
+            //DaneWyjsciowe.Zapisz(eZmienne.PracaCentrali, boStart);
             return 0;
         }
 
