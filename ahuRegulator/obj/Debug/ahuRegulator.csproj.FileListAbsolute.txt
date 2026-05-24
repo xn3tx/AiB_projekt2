@@ -35,3 +35,4 @@ C:\Users\natal\Downloads\ahuRegulator\ahuRegulator\obj\Debug\ahuRegulator.csproj
 C:\Users\natal\Downloads\ahuRegulator\ahuRegulator\obj\Debug\ahuRegul.D956D8AA.Up2Date
 C:\Users\natal\Downloads\ahuRegulator\ahuRegulator\obj\Debug\ahuRegulator.dll
 C:\Users\natal\Downloads\ahuRegulator\ahuRegulator\obj\Debug\ahuRegulator.pdb
+C:\Users\natal\Downloads\ahuRegulator\ahuRegulator\bin\Debug\ahuKlasy.pdb
